@@ -22,20 +22,20 @@ pipeline {
 
         stage('Clean Old Containers') {
             steps {
-                bat 'docker compose down'
+                bat 'docker-compose down'
             }
         }
 
         stage('Deploy with Compose') {
             steps {
-                bat 'docker compose up -d --build'
+                bat 'docker-compose up -d --build'
             }
         }
 
         stage('Verify') {
             steps {
                 bat 'ping -n 16 127.0.0.1 > nul'
-                bat 'docker compose ps'
+                bat 'docker-compose ps'
                 bat 'docker logs server --tail 20'
             }
         }
@@ -45,7 +45,7 @@ pipeline {
         success { echo 'Deployment OK' }
         failure {
             echo 'Pipeline failed'
-            bat 'docker compose logs'
+            bat 'docker-compose logs || exit 0'
         }
     }
 }
